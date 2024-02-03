@@ -25,7 +25,7 @@ const Header = () => {
           <FaMoon />
         </Button>
         <Link to="/signin">
-          <Button className="hidden sm:inline" radientDuoTone="redToYellow">
+          <Button className="hidden sm:inline" gradientDuoTone="redToYellow" outline>
             Sign in
           </Button>
         </Link>
