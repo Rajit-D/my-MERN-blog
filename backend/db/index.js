@@ -1,14 +1,17 @@
 const mongoose = require("mongoose");
 
-dotenv.config();
+// dotenv.config();
 
 const dbConnection = async () => {
   try {
-    await mongoose.connect(process.env.MONGO);
+    await mongoose.connect(
+      "mongodb+srv://rajitdutta2002:One-2-three@cluster0.wf9jjeb.mongodb.net/my-blog"
+    );
+    console.log("MongoDB connected ✅");
   } catch (error) {
     console.log("⚠️ MongoDB connection error -> ", error);
     process.exit(1);
   }
 };
 
-export default dbConnection;
+module.exports = { dbConnection };

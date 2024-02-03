@@ -1,10 +1,12 @@
-const express = require("express");
-const userRoute = require("./routes/user.route.js");
+const { dbConnection } = require("./db/index.js");
+const {app} = require("./app.js");
 
-const app = express();
-
-app.use("/api/user", userRoute);
-
-app.listen(3000, () => {
-  console.log("🌐 Server is running on port 3000...");
-});
+dbConnection()
+.then(() => {
+    app.listen(3000, () => {
+        console.log(`⚙️ Server is running at port : 3000`);
+    })
+})
+.catch((err) => {
+    console.log("MongoDB connection failed ⚠️ !!! ", err);
+})
