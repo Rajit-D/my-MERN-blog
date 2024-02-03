@@ -1,5 +1,6 @@
-const {User} = require("../models/user.model.js");
+const { User } = require("../models/user.model.js");
 const zod = require("zod");
+const { errorHandler } = require("../utils/errorHandler.js");
 
 const signUpBody = zod.object({
   username: zod.string(),
@@ -7,19 +8,14 @@ const signUpBody = zod.object({
   password: zod.string(),
 });
 
-const signUp = async (req, res) => {
+const signUp = async (req, res, next) => {
   const { success } = signUpBody.safeParse(req.body);
 
-  if (!success)
-    return res.status(411).json({
-      message: "Incorrect fields! ⚠️",
-    });
+  if (!success) next(errorHandler(400, "Invalid inputs! ⚠️"));
 
   const userExisting = await User.findOne({
     username: req.body.username,
   });
-
-  console.log(userExisting);
 
   if (userExisting)
     return res.status(411).json({
