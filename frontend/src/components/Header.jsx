@@ -1,14 +1,24 @@
-import { Button, Navbar, TextInput } from "flowbite-react";
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  DropdownDivider,
+  Navbar,
+  TextInput,
+} from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { FaMoon, FaSearch } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const path = useLocation().pathname;
+  const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser);
   return (
     <Navbar>
       <Link to="/">
         <span className="whitespace-nowrap text-xl font-semibold dark:text-white">
-          Gratiano's blog
+          Gratiano&apos;s blog
         </span>
       </Link>
       <TextInput
@@ -24,11 +34,45 @@ const Header = () => {
         <Button className="w-12 h-10 hidden sm:inline" color="gray" pill>
           <FaMoon />
         </Button>
-        <Link to="/signin">
-          <Button className="hidden sm:inline" gradientDuoTone="redToYellow" outline>
-            Sign in
-          </Button>
-        </Link>
+        {currentUser ? (
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar
+                alt="user"
+                img={currentUser.data.rest.profilePicture}
+                rounded
+              />
+            }
+          >
+            <Dropdown.Header>
+              <span className="block text-sm">
+                {currentUser.data.rest.username}
+              </span>
+              <span className="block text-sm">
+                @{currentUser.data.rest.email}
+              </span>
+            </Dropdown.Header>
+            <Link to={"/dashboard?tab=profile"}>
+              <Dropdown.Item>Profile</Dropdown.Item>
+            </Link>
+            <DropdownDivider />
+            <Link to={"/signout"}>
+              <Dropdown.Item>Sign out</Dropdown.Item>
+            </Link>
+          </Dropdown>
+        ) : (
+          <Link to="/signin">
+            <Button
+              className="hidden sm:inline"
+              gradientDuoTone="redToYellow"
+              outline
+            >
+              Sign in
+            </Button>
+          </Link>
+        )}
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
