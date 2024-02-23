@@ -99,6 +99,7 @@ const googleAuth = async (req, res, next) => {
         email: req.body.email,
         profilePicture: req.body.profilePicture,
       });
+      console.log(req.body.profilePicture);
       await newUser.save();
       const token = jwt.sign({ id: newUser._id }, "secret");
 
