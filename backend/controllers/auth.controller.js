@@ -61,7 +61,10 @@ const signIn = async (req, res, next) => {
   });
   if (!passwordValid) return next(errorHandler(400, "Incorrect password! ⚠️"));
 
-  const token = jwt.sign({ id: userValid._id }, "secret");
+  const token = jwt.sign(
+    { id: userValid._id, isAdmin: userValid.isAdmin },
+    "secret"
+  );
   const { password: password, ...rest } = userValid._doc;
 
   res.status(200).cookie("access_token", token, { httpOnly: true }).json(rest);
@@ -77,7 +80,10 @@ const googleAuth = async (req, res, next) => {
     });
 
     if (userExisting) {
-      const token = jwt.sign({ id: userExisting._id }, "secret");
+      const token = jwt.sign(
+        { id: userExisting._id, isAdmin: userExisting.isAdmin },
+        "secret"
+      );
       const { password: password, ...rest } = userExisting._doc;
 
       res
@@ -98,7 +104,10 @@ const googleAuth = async (req, res, next) => {
       });
       console.log(req.body.profilePicture);
       await newUser.save();
-      const token = jwt.sign({ id: newUser._id }, "secret");
+      const token = jwt.sign(
+        { id: newUser._id, isAdmin: newUser.isAdmin },
+        "secret"
+      );
 
       const { password: password, ...rest } = newUser._doc;
 
