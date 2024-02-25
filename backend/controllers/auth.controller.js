@@ -64,10 +64,7 @@ const signIn = async (req, res, next) => {
   const token = jwt.sign({ id: userValid._id }, "secret");
   const { password: password, ...rest } = userValid._doc;
 
-  res
-    .status(200)
-    .cookie("access_token", token, { httpOnly: true })
-    .json({ message: "Sign in successful! ✅", rest });
+  res.status(200).cookie("access_token", token, { httpOnly: true }).json(rest);
 };
 
 const googleAuth = async (req, res, next) => {
@@ -86,7 +83,7 @@ const googleAuth = async (req, res, next) => {
       res
         .status(200)
         .cookie("access_token", token, { httpOnly: true })
-        .json({ message: "Sign in successful! ✅", rest });
+        .json(rest);
     } else {
       const newPassword = Math.random().toString(36).slice(-8);
       const hashedPassword = bcryptjs.hashSync(newPassword, 10);
@@ -108,7 +105,7 @@ const googleAuth = async (req, res, next) => {
       res
         .status(200)
         .cookie("access_token", token, { httpOnly: true })
-        .json({ message: "Sign in successful! ✅", rest });
+        .json(rest);
     }
   } catch (error) {
     next(error);

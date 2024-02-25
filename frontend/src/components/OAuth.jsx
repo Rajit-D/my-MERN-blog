@@ -2,7 +2,7 @@ import { Button } from "flowbite-react";
 import { FaGoogle } from "react-icons/fa";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { app } from "../firebase.js";
-import axios from "axios";
+// import axios from "axios";
 import { useDispatch } from "react-redux";
 import { signInSuccess } from "../redux-store/user/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -16,17 +16,20 @@ const OAuth = () => {
     provider.setCustomParameters({ prompt: "select_account" });
     try {
       const googleResults = await signInWithPopup(auth, provider);
-      console.log(googleResults.user.displayName);
-      const data = await axios.post("/api/auth/google", {
-        username: googleResults.user.displayName,
-        email: googleResults.user.email,
-        profilePicture: googleResults.user.photoURL,
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: googleResults.user.displayName,
+          email: googleResults.user.email,
+          profilePicture: googleResults.user.photoURL,
+        }),
       });
-      console.log(data);
-      // if (data.statusText === "OK") {
-      dispatch(signInSuccess(data));
-      navigate("/");
-      // }
+      const data = await res.json();
+      if (res.ok) {
+        dispatch(signInSuccess(data));
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
     }
