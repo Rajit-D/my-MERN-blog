@@ -9,6 +9,7 @@ import {
   deleteStart,
   deleteSuccess,
   deleteFailure,
+  signOutSuccess,
 } from "../redux-store/user/userSlice";
 
 const DashProfile = () => {
@@ -60,6 +61,19 @@ const DashProfile = () => {
       else dispatch(deleteSuccess(data));
     } catch (error) {
       dispatch(deleteFailure(error.message));
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) console.log(data.message);
+      else dispatch(signOutSuccess());
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -136,7 +150,7 @@ const DashProfile = () => {
       </form>
       <div className="flex justify-between mt-5">
         <Button onClick={() => setShowModal(true)}>Delete account</Button>
-        <Button>Sign out</Button>
+        <Button onClick={handleSignOut}>Sign out</Button>
       </div>
       <Modal
         show={showModal}
