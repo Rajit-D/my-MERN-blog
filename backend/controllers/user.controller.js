@@ -1,5 +1,5 @@
 const { User } = require("../models/user.model");
-const { errorHandler } = require("../utils/errorHandler");
+const { errorHandler } = require("../utils/errorHandler.js");
 const zod = require("zod");
 
 const updateBody = zod.object({
@@ -38,4 +38,16 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-module.exports = { testUser, updateUser };
+const deleteUser = async (req, res, next) => {
+  console.log(req.user.id);
+  if (req.user.id !== req.params.userId)
+    return next(errorHandler(403, "Unauthorized"));
+  try {
+    await User.findByIdAndDelete(req.params.userId);
+    res.status(200).json("User deleted successfully ✅");
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { testUser, updateUser, deleteUser };
