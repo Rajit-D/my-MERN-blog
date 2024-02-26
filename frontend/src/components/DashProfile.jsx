@@ -11,9 +11,10 @@ import {
   deleteFailure,
   signOutSuccess,
 } from "../redux-store/user/userSlice";
+import { Link } from "react-router-dom";
 
 const DashProfile = () => {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading } = useSelector((state) => state.user);
   // const [imageFile, setImageFile] = useState(null);
   // const [imageURL, setImageURL] = useState(null);
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
@@ -134,9 +135,21 @@ const DashProfile = () => {
           defaultValue={currentUser.email}
           onChange={handleChange}
         />
-        <Button type="submit" gradientDuoTone="pinkToOrange">
-          Update
+        <Button type="submit" gradientDuoTone="pinkToOrange" disabled={loading}>
+          {loading ? "Loading..." : "Update"}
         </Button>
+        {currentUser.isAdmin && (
+          <Link to="/create-post">
+            <Button
+              type="button"
+              gradientDuoTone="pinkToOrange"
+              outline
+              className="w-full"
+            >
+              Create a post
+            </Button>
+          </Link>
+        )}
         {updateUserSuccess && (
           <Alert color="success" className="mt-5">
             {updateUserSuccess}
